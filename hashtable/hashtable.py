@@ -23,6 +23,10 @@ class HashTable:
     def __init__(self, capacity):
         # Your code here
 
+        # initialize capacity
+        self.capacity = capacity
+        # the buckets is empty array * capacity 
+        self.buckets = [None] * capacity
 
     def get_num_slots(self):
         """
@@ -35,7 +39,8 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        # return the len of the buckets list to hold the hash table data the number of slot in main list
+        return len(self.buckets)
 
     def get_load_factor(self):
         """
@@ -44,7 +49,8 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        
+        return (self.buckets + 1) % self.capacity 
 
     def fnv1(self, key):
         """
@@ -63,7 +69,19 @@ class HashTable:
         Implement this, and/or FNV-1.
         """
         # Your code here
+        # initailize the hashing string
+        my_hash = str(key).encode()
 
+        # initailize the sum to be the default as 0
+        total = 0
+        for byte in my_hash:
+            # sum the total of string integer 
+            total += byte
+            # limit the total to 32 bits 
+            total &= 0xFFFFFFFF
+        # return the total that will modulo with the len( of hashing table ## slot later)
+        return total
+  
 
     def hash_index(self, key):
         """
@@ -82,7 +100,30 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # compute index of key
+        index = self.hash_index(key)
+        # initialize hash table to check base case
+        # node = self.buckets[index]
+        self.buckets[index] = value
 
+       
+       # if the bucket is empty: 
+        # if node == None:
+        #     # bucket hash table is store the added given key to hash table, and return until it hit the limit
+        #     self.buckets[index] = HashTableEntry(key, value)
+
+        #     return 
+        # # prev = node
+        # # check while node (bucket is not empty) and the node.key is not = the given key: then
+        # while node is not None and node.key != key:
+        #     prev = node
+        #     node = node.next
+        # if node is  None:
+
+        #     prev.next = HashTableEntry(key, value)
+        # else:
+        #     node.value = value
+        
 
     def delete(self, key):
         """
@@ -93,8 +134,31 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        index = self.hash_index(key)
+        # node = self.buckets[index]
+        self.buckets[index] = None
+        # prev = None
 
+        # if node.key == key:
+        #     self.buckets[index] = node.next
+        #     return
+        # while node is not None and node.key != key:
+        #     prev= node
+        #     node = node.next
 
+        # if node is None:
+        #     return None
+        # else:
+        #     # self.size -= 1
+        #     result = node.value
+
+        #     if prev is None:
+        #         node = None
+        #     else:
+        #         prev.next = prev.next.next
+
+        #     return result
+       
     def get(self, key):
         """
         Retrieve the value stored with the given key.
@@ -104,6 +168,16 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        index = self.hash_index(key)
+
+        node = self.buckets[index]
+        while node is not None and node.key != key:
+            node = node.next
+        if node is None:
+            return None
+        else:
+            return node.value
+  
 
 
     def resize(self, new_capacity):
@@ -114,6 +188,9 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        new_capacity = self.capacity
+
+
 
 
 
