@@ -49,8 +49,10 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        
-        return (self.buckets + 1) % self.capacity 
+        count = 0
+        load_factor =  count / self.capacity
+ 
+        return load_factor
 
     def fnv1(self, key):
         """
@@ -103,26 +105,30 @@ class HashTable:
         # compute index of key
         index = self.hash_index(key)
         # initialize hash table to check base case
-        # node = self.buckets[index]
-        self.buckets[index] = value
+        node = self.buckets[index]
+        # self.buckets[index] = value
 
        
-       # if the bucket is empty: 
-        # if node == None:
-        #     # bucket hash table is store the added given key to hash table, and return until it hit the limit
-        #     self.buckets[index] = HashTableEntry(key, value)
+    #    if the bucket is empty: 
+        if node == None:
+            # bucket hash table is store the added given key to hash table, and return until it hit the limit
+            self.buckets[index] = HashTableEntry(key, value)
 
-        #     return 
-        # # prev = node
-        # # check while node (bucket is not empty) and the node.key is not = the given key: then
-        # while node is not None and node.key != key:
-        #     prev = node
-        #     node = node.next
-        # if node is  None:
+            return 
+        # prev = node
+        # check while node (bucket is not empty) and the node.key is not = the given key: then 
+        while node is not None and node.key != key:
+            #give a variable previous key and vale is 
+            prev = node
+            node = node.next
+        if node is  None:
 
-        #     prev.next = HashTableEntry(key, value)
-        # else:
-        #     node.value = value
+            prev.next = HashTableEntry(key, value)
+        else:
+            node.value = value
+
+        if self.get_load_factor() > 0.7:
+            self.resize(self.capacity * 2)
         
 
     def delete(self, key):
@@ -134,30 +140,40 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # get the index for the key
         index = self.hash_index(key)
-        # node = self.buckets[index]
-        self.buckets[index] = None
-        # prev = None
-
-        # if node.key == key:
-        #     self.buckets[index] = node.next
-        #     return
-        # while node is not None and node.key != key:
-        #     prev= node
-        #     node = node.next
-
-        # if node is None:
-        #     return None
-        # else:
-        #     # self.size -= 1
-        #     result = node.value
-
-        #     if prev is None:
-        #         node = None
-        #     else:
-        #         prev.next = prev.next.next
-
-        #     return result
+        # 
+        node = self.buckets[index]
+        ##
+        # self.buckets[index] = None
+        # give variable for previous value to be None
+        prev = None
+        # node (self.buckets[index].key) is equal the key then  
+        #check base case of the array then return 
+        if node.key == key:
+            self.buckets[index] = node.next
+            return
+            # check while node is not and the node.key is not the same given key then 
+        while node is not None and node.key != key:
+            # set our previous pointer is equal to the current key then pointer to the next node or ( next self.buckets[index])
+            prev= node
+            node = node.next
+        # if not found node  then we return none
+        if node is None:
+            return None
+        else:
+        # other wise  if we found that key set result to check the value  ofthat node.
+            result = node.value
+        # if the previos node is None 
+        # we deleted the key in that linked list
+            if prev is None:
+                node = None
+            else:
+                prev.next = prev.next.next
+            # return the value of that deleted node.value
+            return result
+        # if self.get_load_factor() < 0.2:
+        #     self.resize(self.capacity * 0.5)
        
     def get(self, key):
         """
@@ -188,8 +204,17 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        new_capacity = self.capacity
 
+        index = 0
+        # created the new array of buckets with the new capacity # new empty slot holding
+        new_bucket =  [None] * new_capacity 
+        # loop through the old bucket 
+        for i in self.buckets:
+            new_bucket[index] = i
+            # every count index is incremetn by 1
+            index += 1
+        # return self.buckets will equal new_bucket with new slot
+        self.buckets = new_bucket
 
 
 
